@@ -48,24 +48,30 @@ class Caminhamento:
                 if self.G.listaAdjacencia[n].data == 'A':                    
                     if self.G.listaAdjacencia[n].x == 0 or self.G.listaAdjacencia[n].y == 0:    
                         print("achei o A externo")
-                        #print("vizinhos " + str(self.G.listaAdjacencia[n].data + " " +str(self.G.listaAdjacencia[n].x + 1) + " "+str(self.G.listaAdjacencia[n].y+1)))
-                        fila.append(n)   
+                        print(str(self.G.listaAdjacencia[n].data + " " +str(self.G.listaAdjacencia[n].x + 1) + " "+str(self.G.listaAdjacencia[n].y+1)))
+                        fila.append(n)
+                        marked[n] = True   
                     if self.G.listaAdjacencia[n].x == self.maxX or self.G.listaAdjacencia[n].y == self.maxY:
                         print("achei o A externo")
-                        #print("vizinhos " + str(self.G.listaAdjacencia[n].data + " " +str(self.G.listaAdjacencia[n].x + 1) + " "+str(self.G.listaAdjacencia[n].y+1)))
+                        print(str(self.G.listaAdjacencia[n].data + " " +str(self.G.listaAdjacencia[n].x + 1) + " "+str(self.G.listaAdjacencia[n].y+1)))
+                        marked[n] = True
                         fila.append(n)    
-    
-        while len(fila) != 0:
+        print(len(fila))
+        while len(fila) != 0:            
+            print("entrou no while")
             v = fila.pop(0)
+            print(len(fila))
             #print(marked[0])
-            print("entrou aqui")
             for w in range(len(self.G.listaAdjacencia[v].vizinhos)):
-                print(str(self.G.listaAdjacencia[v].vizinhos[w].data) + '' +str(self.G.listaAdjacencia[v].vizinhos[w].x) + str(self.G.listaAdjacencia[v].vizinhos[w].y) )
-                #print(marked[w])
-                if not marked[w]:
-                    print("marcou")
-                    marked[w] = True
-                    fila.append(w)
+                print(str(self.G.listaAdjacencia[v].vizinhos[w].data) + ' ' +str(self.G.listaAdjacencia[v].vizinhos[w].x+1) + ' ' + str(self.G.listaAdjacencia[v].vizinhos[w].y+1) )
+                #print(marked[w])                
+                for x in range(len(self.G.listaAdjacencia)):
+                    if self.G.listaAdjacencia[x].x == self.G.listaAdjacencia[v].vizinhos[w].x:
+                         if self.G.listaAdjacencia[x].y == self.G.listaAdjacencia[v].vizinhos[w].y: 
+                            if not marked[x]:
+                                print("marcou")
+                                marked[x] = True
+                                fila.append(x)
         print("saiu")
 
 
@@ -131,8 +137,8 @@ if __name__ == "__main__":
 
     maxX = len(matriz)
     maxY = len(matriz[0])
-    print(len(matriz))
-    print(len(matriz[0]))
+    #print(len(matriz))
+    #print(len(matriz[0]))
     #v = print(graph.retornaVertices())
     
     bfs = Caminhamento(graph, maxX, maxY)
