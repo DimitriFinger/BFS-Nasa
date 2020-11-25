@@ -1,4 +1,5 @@
 class Nodo:  
+    def __init__(self, data, x, y):
         self.data = data
         self.vizinhos = []
         self.x = x
@@ -15,8 +16,12 @@ class Grafo:
             return True
         else:
             return False
+
+    #retorna número de vertices na lista de vertices
+    def retornaVertices(self):
+        return len(self.listaAdjacencia)
  
-#imprime cada nodo, sua posição e seus nodos adjacentes
+    #imprime cada nodo, sua posição e seus nodos adjacentes
     def imprimeLista(self):
         for n in range(len(self.listaAdjacencia)):
             print(str(self.listaAdjacencia[n].data) +"  "+ str(self.listaAdjacencia[n].x+1)  +"  "+ str(self.listaAdjacencia[n].y+1) )
@@ -26,17 +31,45 @@ class Grafo:
                 print("vizinhos " + str(vizinho[i].data + " " +str(vizinho[i].x + 1) + " "+str(vizinho[i].y+1)))
 
 
-#retorna numero de vertices possíveis da entrada
-def contaVertices(matriz):
-    vertices = 0
-    for i in range(len(matriz)):
-        for j in range(len(matriz[0])):
-            if matriz[i][j] == '.' or matriz[i][j].isalpha():
-                vertices += 1
-    return vertices
+class Caminhamento:
+    def __init__(self, G, maxX, maxY):        
+        #self.start = start # A
+        self.G = G
+        self.maxX = maxX - 1
+        self.maxY = maxY - 1
+
+    def bfs(self):
+        marked = [False] * self.G.retornaVertices()
+        edgeTo = [None] * self.G.retornaVertices()
+        distTo = [None] * self.G.retornaVertices()
+        fila = []
+
+        for n in range(len(self.G.listaAdjacencia)):
+                if self.G.listaAdjacencia[n].data == 'A':                    
+                    if self.G.listaAdjacencia[n].x == 0 or self.G.listaAdjacencia[n].y == 0:    
+                        print("achei o A externo")
+                        #print("vizinhos " + str(self.G.listaAdjacencia[n].data + " " +str(self.G.listaAdjacencia[n].x + 1) + " "+str(self.G.listaAdjacencia[n].y+1)))
+                        fila.append(n)   
+                    if self.G.listaAdjacencia[n].x == self.maxX or self.G.listaAdjacencia[n].y == self.maxY:
+                        print("achei o A externo")
+                        #print("vizinhos " + str(self.G.listaAdjacencia[n].data + " " +str(self.G.listaAdjacencia[n].x + 1) + " "+str(self.G.listaAdjacencia[n].y+1)))
+                        fila.append(n)    
+    
+        while len(fila) != 0:
+            v = fila.pop(0)
+            #print(marked[0])
+            print("entrou aqui")
+            for w in range(len(self.G.listaAdjacencia[v].vizinhos)):
+                print(str(self.G.listaAdjacencia[v].vizinhos[w].data) + '' +str(self.G.listaAdjacencia[v].vizinhos[w].x) + str(self.G.listaAdjacencia[v].vizinhos[w].y) )
+                #print(marked[w])
+                if not marked[w]:
+                    print("marcou")
+                    marked[w] = True
+                    fila.append(w)
+        print("saiu")
 
 
-#cria grafo / cria nodos do grafo, sua lista de adjacencia e adiciona arestas entre os porais
+#cria grafo / cria nodos do grafo, sua lista de adjacencia e adiciona arestas entre os portais
 def criaGrafo(matriz):
     graph = Grafo()
    
@@ -69,16 +102,16 @@ def criaGrafo(matriz):
                             node.vizinhos.append(node2)
                             #print("nodo lateral esquerdo adicionado!")
 
-
-# cria arestas entre os portais
+    # adiciona adjacencias entre os portais
     for n in range(len(graph.listaAdjacencia)):
         if graph.listaAdjacencia[n].data.isalpha():
             for m in range(len(graph.listaAdjacencia)):
                 if graph.listaAdjacencia[m].data == graph.listaAdjacencia[n].data and m != n:
-                      graph.listaAdjacencia[m].vizinhos.append(graph.listaAdjacencia[n])  
-                            
-                      
+                      graph.listaAdjacencia[m].vizinhos.append(graph.listaAdjacencia[n])                      
     return graph
+
+
+
 
 if __name__ == "__main__":
 
@@ -92,12 +125,20 @@ if __name__ == "__main__":
     for i in range(len(texto)):
         print(matriz[i])
     
-    #print(contaVertices(matriz)) 
+    #print(retornaVertices())  # Número de possiveis vertices na matriz fornecida
     arq.close()
-
     graph = criaGrafo(matriz)
 
-    graph.imprimeLista()
+    maxX = len(matriz)
+    maxY = len(matriz[0])
+    print(len(matriz))
+    print(len(matriz[0]))
+    #v = print(graph.retornaVertices())
+    
+    bfs = Caminhamento(graph, maxX, maxY)
+    bfs.bfs()
+    
+    #graph.imprimeLista()
 
 
 
